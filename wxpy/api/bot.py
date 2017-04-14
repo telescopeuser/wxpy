@@ -7,13 +7,14 @@ import os.path
 import sys
 if sys.version_info >= (3, 1):
     import queue
+	import tempfile
 elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
     import Queue
+	from backports import tempfile
 else:
     raise RuntimeError(
         "Python v%d.%d is not supported" % sys.version_info[0:2])
 
-import tempfile
 from pprint import pformat
 from threading import Thread
 
