@@ -16,10 +16,12 @@ from wxpy.utils import enhance_connection, ensure_list, get_user_name, handle_re
 # 14 APR 2017 - www.KudosData.com
 import sys
 if sys.version_info >= (3, 1):
-    import queue
-	import tempfile
+        print('Python 3+')
+        import queue
+        import tempfile
 elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
-    import Queue
+        print('Python 2+')
+	import Queue
 	from backports import tempfile
 else:
     raise RuntimeError(
