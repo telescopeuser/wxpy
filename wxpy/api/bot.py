@@ -82,13 +82,13 @@ class Bot(object):
         self.listening_thread = None
 
 # www.KudosData.com
-		if sys.version_info >= (3, 1):
-			import tempfile
-		elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
-			from backports import tempfile
-		else:
-			raise RuntimeError(
-				"Python v%d.%d is not supported" % sys.version_info[0:2])
+#		if sys.version_info >= (3, 1):
+#			import tempfile
+#		elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
+#			from backports import tempfile
+#		else:
+#			raise RuntimeError(
+#				"Python v%d.%d is not supported" % sys.version_info[0:2])
         self.temp_dir = tempfile.TemporaryDirectory(prefix='wxpy_')
 
         self.start()
