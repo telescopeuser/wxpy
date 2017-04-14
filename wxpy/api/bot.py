@@ -3,6 +3,16 @@ import functools
 import logging
 import os.path
 
+from pprint import pformat
+from threading import Thread
+
+import itchat
+
+from wxpy.api.chats import Chat, Chats, Friend, Group, MP, User
+from wxpy.api.messages import Message, MessageConfig, Messages, Registered
+from wxpy.api.messages import SYSTEM
+from wxpy.utils import enhance_connection, ensure_list, get_user_name, handle_response, wrap_user_name
+
 # 14 APR 2017 - www.KudosData.com
 import sys
 if sys.version_info >= (3, 1):
@@ -14,16 +24,6 @@ elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
 else:
     raise RuntimeError(
         "Python v%d.%d is not supported" % sys.version_info[0:2])
-
-from pprint import pformat
-from threading import Thread
-
-import itchat
-
-from wxpy.api.chats import Chat, Chats, Friend, Group, MP, User
-from wxpy.api.messages import Message, MessageConfig, Messages, Registered
-from wxpy.api.messages import SYSTEM
-from wxpy.utils import enhance_connection, ensure_list, get_user_name, handle_response, wrap_user_name
 
 logger = logging.getLogger(__name__)
 
