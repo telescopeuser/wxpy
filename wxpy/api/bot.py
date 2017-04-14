@@ -19,11 +19,11 @@ print('Your Python version is: %d.%d' % sys.version_info[0:2])
 if sys.version_info >= (3, 1):
         import queue
         import tempfile
-	from __future__ import division
+#	from __future__ import division
 elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
 	import Queue
 	from backports import tempfile
-	from __future__ import unicode_literals, division
+#	from __future__ import unicode_literals, division
 else:
     raise RuntimeError(
         "Python v%d.%d is not supported" % sys.version_info[0:2])
