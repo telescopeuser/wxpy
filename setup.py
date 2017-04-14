@@ -2,13 +2,14 @@
 # coding: utf-8
 
 import re
+import io
 
 from setuptools import find_packages, setup
 
-with open('wxpy/__init__.py', encoding='utf-8') as fp:
+with io.open('wxpy/__init__.py', encoding='utf-8') as fp:
     version = re.search(r"__version__\s*=\s*'([\w\-.]+)'", fp.read()).group(1)
 
-with open('README.rst', encoding='utf-8') as fp:
+with io.open('README.rst', encoding='utf-8') as fp:
     readme = fp.read()
 
 setup(

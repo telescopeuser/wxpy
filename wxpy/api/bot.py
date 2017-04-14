@@ -2,7 +2,17 @@ import atexit
 import functools
 import logging
 import os.path
-import queue
+
+# 14 APR 2017 - www.KudosData.com
+import sys
+if sys.version_info >= (3, 1):
+    import queue
+elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
+    import Queue
+else:
+    raise RuntimeError(
+        "Python v%d.%d is not supported" % sys.version_info[0:2])
+
 import tempfile
 from pprint import pformat
 from threading import Thread
