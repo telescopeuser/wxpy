@@ -15,12 +15,11 @@ from wxpy.utils import enhance_connection, ensure_list, get_user_name, handle_re
 
 # 14 APR 2017 - www.KudosData.com
 import sys
+print('Your Python version is: %d.%d' % sys.version_info[0:2])
 if sys.version_info >= (3, 1):
-        print('Python 3+')
         import queue
         import tempfile
 elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
-        print('Python 2+')
 	import Queue
 	from backports import tempfile
 else:
@@ -407,7 +406,16 @@ class Bot(object):
         elif self.is_listening:
             logger.warning('{} is already running, no need to start again.'.format(self))
         else:
-            self.listening_thread = Thread(target=self._listen, daemon=True)
+# www.KudosData.com
+#            self.listening_thread = Thread(target=self._listen, daemon=True)
+            if sys.version_info >= (3, 1):
+                    self.listening_thread = Thread(target=self._listen, daemon=True)
+	    elif sys.version_info >= (2, 6) and sys.version_info < (3, 0):
+                    self.listening_thread = Thread(target=self._listen)
+                    self.listening_thread.daemon = True
+	    else:
+                    raise RuntimeError("Python v%d.%d is not supported" % sys.version_info[0:2])
+
             self.listening_thread.start()
 
     def stop(self):
