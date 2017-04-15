@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .chat import Chat
 from .chats import Chats
 from .friend import Friend

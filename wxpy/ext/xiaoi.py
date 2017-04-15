@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # coding: utf-8
 
 # created by: Han Feng (https://github.com/hanx11)

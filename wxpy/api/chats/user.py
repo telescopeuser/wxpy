@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .chat import Chat
 
 MALE = 1

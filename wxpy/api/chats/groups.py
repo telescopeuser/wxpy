@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from wxpy.utils import ensure_list, match_attributes, match_name
 from .user import User
 
