@@ -422,9 +422,11 @@ class Bot(object):
         elif self.is_listening:
             logger.warning('{} is already running, no need to start again.'.format(self))
         else:
-            self.listening_thread = Thread(target=self._listen, daemon=True)
-            self.listening_thread.start()
+            #
             # www.KudosData.com : to support both python 2 & 3
+            #
+            # self.listening_thread = Thread(target=self._listen, daemon=True)
+            # self.listening_thread.start()
             if sys.version_info.major >= 3:
                 self.listening_thread = Thread(target=self._listen, daemon=True)
                 self.listening_thread.start()
