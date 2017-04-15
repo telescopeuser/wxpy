@@ -424,6 +424,14 @@ class Bot(object):
         else:
             self.listening_thread = Thread(target=self._listen, daemon=True)
             self.listening_thread.start()
+            # www.KudosData.com : to support both python 2 & 3
+            if sys.version_info.major >= 3:
+                self.listening_thread = Thread(target=self._listen, daemon=True)
+                self.listening_thread.start()
+            else:
+                self.listening_thread = Thread(target=self._listen)
+                self.listening_thread.daemon = True
+                self.listening_thread.start()
 
     def stop(self):
         """
