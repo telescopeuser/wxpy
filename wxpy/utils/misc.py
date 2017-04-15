@@ -1,5 +1,6 @@
 import inspect
 import re
+import weakref
 from functools import wraps
 
 from requests.adapters import HTTPAdapter
@@ -48,7 +49,7 @@ def handle_response(to_class=None):
 
             from wxpy.api.bot import Bot
             if isinstance(self, Bot):
-                bot = self
+                bot = weakref.proxy(self)
             else:
                 bot = getattr(self, 'bot', None)
                 if not bot:
@@ -84,6 +85,7 @@ def ensure_list(x, except_false=True):
     :param x: 输入对象
     :param except_false: None, False 等例外，会直接返回原值
     :return: 列表，或 None, False 等
+    :rtype: list
     """
 
     if isinstance(x, (list, tuple)) or (not x and except_false):
@@ -233,6 +235,7 @@ def get_receiver(receiver=None):
         * 当为 :class:`机器人 <Bot>` 时，将返回该机器人的"文件传输助手"
         * 当为 :class:`聊天对象 <Chat>` 时，将返回该聊天对象
     :return: 作为接收者的聊天对象
+    :rtype: :class:`wxpy.Chat`
     """
 
     from wxpy.api.chats import Chat
@@ -248,7 +251,7 @@ def get_receiver(receiver=None):
         raise TypeError('expected Chat, Bot, str, True or None')
 
 
-def enhance_connection(session, pool_connections=30, pool_maxsize=30, max_retries=3):
+def enhance_connection(session, pool_connections=30, pool_maxsize=30, max_retries=30):
     """
     增强 requests.Session 对象的网络连接性能
 
@@ -266,3 +269,23 @@ def enhance_connection(session, pool_connections=30, pool_maxsize=30, max_retrie
                 pool_maxsize=pool_maxsize,
                 max_retries=max_retries,
             ))
+
+
+def get_text_without_at_bot(msg):
+    """
+    获得 Message 对象中的消息内容，并清理 @ 机器人的部分
+
+    :param msg: Message 对象
+    :return: 清理 @ 机器人部分后的文本内容
+    :rtype: str
+    """
+
+    from wxpy.api.chats import Group
+
+    text = msg.text
+
+    if isinstance(msg.chat, Group):
+        name = msg.chat.self.name
+        text = re.sub(r'\s*@' + re.escape(name) + r'\u2005?\s*', '', text)
+
+    return text

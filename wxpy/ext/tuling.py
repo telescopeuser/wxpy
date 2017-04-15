@@ -3,7 +3,8 @@ import pprint
 
 import requests
 
-from wxpy.ext.talk_bot_utils import get_context_user_id, get_text_without_at, next_topic
+from wxpy.ext.talk_bot_utils import get_context_user_id, next_topic
+from wxpy.utils.misc import get_text_without_at_bot
 from wxpy.utils import enhance_connection
 
 logger = logging.getLogger(__name__)
@@ -48,6 +49,7 @@ class Tuling(object):
         :param msg: Message 对象
         :param at_member: 若消息来自群聊，回复时 @发消息的群成员
         :return: 答复文本
+        :rtype: str
         """
         ret = self.reply_text(msg, at_member)
         msg.reply(ret)
@@ -60,6 +62,7 @@ class Tuling(object):
         :param msg: Message 对象
         :param at_member: 若消息来自群聊，回复时 @发消息的群成员
         :return: 答复文本
+        :rtype: str
         """
 
         def process_answer():
@@ -125,12 +128,12 @@ class Tuling(object):
         if location:
             location = location[:30]
 
-        info = str(get_text_without_at(msg))[-30:]
+        info = str(get_text_without_at_bot(msg))[-30:]
 
         payload = dict(
             key=self.api_key,
             info=info,
-            user_id=user_id,
+            userid=user_id,
             loc=location
         )
 

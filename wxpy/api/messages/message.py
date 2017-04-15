@@ -1,11 +1,15 @@
 import html
+import logging
 import os
 import tempfile
+import weakref
 from datetime import datetime
 from xml.etree import ElementTree as ETree
 
 from wxpy.api.chats import Chat, Group, Member, User
 from wxpy.utils import wrap_user_name
+
+logger = logging.getLogger(__name__)
 
 # 文本
 TEXT = 'Text'
@@ -39,10 +43,10 @@ class Message(object):
     def __init__(self, raw, bot):
         self.raw = raw
 
-        self.bot = bot
+        self.bot = weakref.proxy(bot)
         self.type = self.raw.get('Type')
 
-        self.is_at = self.raw.get('isAt')
+        self.is_at = self.raw.get('IsAt') or self.raw.get('isAt')
 
         self.file_name = self.raw.get('FileName')
         self.file_size = self.raw.get('FileSize')
@@ -106,7 +110,7 @@ class Message(object):
         return hash((Message, self.id))
 
     def __repr__(self):
-        text = (str(self.text or '')).replace('\n', '↩')
+        text = (str(self.text or '')).replace('\n', ' ↩ ')
         text += ' ' if text else ''
 
         if self.sender == self.bot.self:
@@ -127,6 +131,8 @@ class Message(object):
 
         * 对于自己发送的消息，为消息的接收者
         * 对于别人发送的消息，为消息的发送者
+        
+        :rtype: :class:`wxpy.User`, :class:`wxpy.Group`
         """
 
         if self.raw.get('FromUserName') == self.bot.self.user_name:
@@ -138,6 +144,8 @@ class Message(object):
     def sender(self):
         """
         消息的发送者
+        
+        :rtype: :class:`wxpy.User`, :class:`wxpy.Group`
         """
 
         return self._get_chat_by_user_name(self.raw.get('FromUserName'))
@@ -146,6 +154,8 @@ class Message(object):
     def receiver(self):
         """
         消息的接收者
+        
+        :rtype: :class:`wxpy.User`, :class:`wxpy.Group`
         """
 
         return self._get_chat_by_user_name(self.raw.get('ToUserName'))
@@ -155,6 +165,8 @@ class Message(object):
         """
         * 若消息来自群聊，则此属性为消息的实际发送人(具体的群成员)
         * 若消息来自其他聊天对象(非群聊)，则此属性为 None
+        
+        :rtype: NoneType, :class:`wxpy.Member`
         """
 
         if isinstance(self.chat, Group):
@@ -162,7 +174,7 @@ class Message(object):
                 return self.chat.self
             else:
                 actual_user_name = self.raw.get('ActualUserName')
-                for _member in self.chat:
+                for _member in self.chat.members:
                     if _member.user_name == actual_user_name:
                         return _member
                 return Member(dict(
@@ -254,6 +266,8 @@ class Message(object):
 
         """
 
+        logger.info('{}: forwarding to {}: {}'.format(self.bot, chat, self))
+
         def wrapped_send(send_type, *args, **kwargs):
             if send_type == 'msg':
                 if args:
@@ -285,12 +299,12 @@ class Message(object):
             if self.type is PICTURE:
                 return wrapped_send('image', path)
             elif self.type is VIDEO:
-                chat.send_video()
                 return wrapped_send('video', path)
             else:
                 return wrapped_send('file', path)
 
         def raise_properly(text):
+            logger.warning(text)
             if raise_for_unsupported:
                 raise NotImplementedError(text)
 

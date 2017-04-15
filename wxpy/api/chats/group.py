@@ -28,8 +28,10 @@ class Group(Chat):
             return self.raw.get('MemberList', list())
 
         ret = Chats(source=self)
-        for raw in raw_member_list() or raw_member_list(True):
-            ret.append(Member(raw, self))
+        ret.extend(map(
+            lambda x: Member(x, self),
+            raw_member_list() or raw_member_list(True)
+        ))
         return ret
 
     def __contains__(self, user):
@@ -52,6 +54,7 @@ class Group(Chat):
         :param name: 成员名称关键词
         :param attributes: 属性键值对
         :return: 匹配的群聊成员
+        :rtype: :class:`wxpy.Chats`
         """
         return self.members.search(name, **attributes)
 
@@ -91,6 +94,8 @@ class Group(Chat):
         :param members_details: 是否包括群聊成员的详细信息 (地区、性别、签名等)
         """
 
+        logger.info('updating {} (members_details={})'.format(self, members_details))
+
         @handle_response()
         def do():
             return self.bot.core.update_chatroom(self.user_name, members_details)
@@ -106,6 +111,8 @@ class Group(Chat):
         :param use_invitation: 使用发送邀请的方式
         """
 
+        logger.info('adding {} into {} (use_invitation={}))'.format(users, self, use_invitation))
+
         return self.bot.core.add_member_into_chatroom(
             self.user_name,
             ensure_list(wrap_user_name(users)),
@@ -119,6 +126,8 @@ class Group(Chat):
 
         :param members: 待移除的用户列表或单个用户
         """
+
+        logger.info('removing {} from {}'.format(members, self))
 
         return self.bot.core.delete_member_from_chatroom(
             self.user_name,

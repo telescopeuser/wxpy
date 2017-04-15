@@ -6,10 +6,9 @@ class Messages(list):
     多条消息的合集，可用于记录或搜索
     """
 
-    def __init__(self, msg_list=None, bot=None, max_history=None):
+    def __init__(self, msg_list=None, max_history=None):
         if msg_list:
             super(Messages, self).__init__(msg_list)
-        self.bot = bot
         self.max_history = max_history
 
     def append(self, msg):
@@ -24,6 +23,7 @@ class Messages(list):
         :param keywords: 文本关键词
         :param attributes: 属性键值对
         :return: 所有匹配的消息
+        :rtype: :class:`wxpy.Messages`
         """
 
         def match(msg):
@@ -33,4 +33,4 @@ class Messages(list):
                 return
             return True
 
-        return Messages(filter(match, self), bot=self.bot, max_history=self.max_history)
+        return Messages(filter(match, self), max_history=self.max_history)
