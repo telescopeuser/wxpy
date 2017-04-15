@@ -4,16 +4,7 @@ import functools
 import logging
 import os.path
 import queue
-
-
-# www.KudosData.com : to support both python 2 & 3
-# import tempfile
-import sys
-if sys.version_info.major >= 3:
-    import tempfile
-else:
-    import backports.tempfile as tempfile
-
+import tempfile
 from pprint import pformat
 from threading import Thread
 
