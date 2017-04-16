@@ -103,7 +103,7 @@ def prepare_keywords(keywords):
         keywords = ''
     if isinstance(keywords, str):
         keywords = re.split(r'\s+', keywords)
-    return map(lambda x: x.encode('utf-8').lower(), keywords)
+    return map(lambda x: x.lower(), keywords)
 
 
 def match_text(text, keywords):
@@ -118,7 +118,7 @@ def match_text(text, keywords):
     if not text:
         text = ''
     else:
-        text = text.encode('utf-8').lower()
+        text = text.lower()
 
     keywords = prepare_keywords(keywords)
 
@@ -158,7 +158,7 @@ def match_name(chat, keywords):
 
     for kw in keywords:
         for attr in 'remark_name', 'display_name', 'nick_name', 'wxid':
-            if kw in str(getattr(chat, attr, '')).encode('utf-8').lower():
+            if kw in str(getattr(chat, attr, '')).lower():
                 break
         else:
             return False
