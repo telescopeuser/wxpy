@@ -3,10 +3,15 @@ import atexit
 import functools
 import logging
 import os.path
-import queue
-
 
 # www.KudosData.com : to support both python 2 & 3
+#
+# import queue
+try:
+    import queue
+except:
+    from multiprocessing import Queue as queue
+
 # import tempfile
 import sys
 if sys.version_info.major >= 3:
