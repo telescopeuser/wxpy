@@ -3,8 +3,22 @@ import atexit
 import functools
 import logging
 import os.path
-import queue
-import tempfile
+
+# www.KudosData.com : to support both python 2 & 3
+#
+# import queue
+try:
+    import queue
+except:
+    from multiprocessing import Queue as queue
+
+# import tempfile
+import sys
+if sys.version_info.major >= 3:
+    import tempfile
+else:
+    import backports.tempfile as tempfile
+
 from pprint import pformat
 from threading import Thread
 
@@ -413,8 +427,18 @@ class Bot(object):
         elif self.is_listening:
             logger.warning('{} is already running, no need to start again.'.format(self))
         else:
-            self.listening_thread = Thread(target=self._listen, daemon=True)
-            self.listening_thread.start()
+            #
+            # www.KudosData.com : to support both python 2 & 3
+            #
+            # self.listening_thread = Thread(target=self._listen, daemon=True)
+            # self.listening_thread.start()
+            if sys.version_info.major >= 3:
+                self.listening_thread = Thread(target=self._listen, daemon=True)
+                self.listening_thread.start()
+            else:
+                self.listening_thread = Thread(target=self._listen)
+                self.listening_thread.daemon = True
+                self.listening_thread.start()
 
     def stop(self):
         """

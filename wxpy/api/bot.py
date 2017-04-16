@@ -90,7 +90,8 @@ class Bot(object):
         atexit.register(self._cleanup)
 
     def __repr__(self):
-        return '<{}: {}>'.format(self.__class__.__name__, self.self.name)
+#        return '<{}: {}>'.format(self.__class__.__name__, self.self.name)
+        return u'<{}: {}>'.encode('utf-8').format(self.__class__.__name__, self.self.name)
 
     @handle_response()
     def logout(self):
@@ -415,7 +416,8 @@ class Bot(object):
                 self._process_message(msg)
         finally:
             self.is_listening = False
-            logger.info('{}: stopped'.format(self))
+#            logger.info('{}: stopped'.format(self))
+            logger.info(u'{}: stopped'.encode('utf-8').format(self))
 
     def start(self):
         """
